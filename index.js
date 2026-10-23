@@ -148,7 +148,7 @@ module.exports = function serialize(obj, options) {
     // which are later replaced by their string representation.
     function replacer(key, value) {
 
-        if (!value && value !== undefined && value !== BigInt(0)) {
+        if (!value && value !== undefined && value !== BigInt(0) && !(typeof value === 'number' && isNaN(value))) {
             return value;
         }
 
@@ -198,7 +198,7 @@ module.exports = function serialize(obj, options) {
             return '@__U-' + UID + '-' + (undefs.push(origValue) - 1) + '__@';
         }
 
-        if (type === 'number' && !isNaN(origValue) && !isFinite(origValue)) {
+        if (type === 'number' && !isFinite(origValue)) {
             return '@__I-' + UID + '-' + (infinities.push(origValue) - 1) + '__@';
         }
 
@@ -343,7 +343,7 @@ module.exports = function serialize(obj, options) {
         }
 
         if (type === 'I') {
-            return infinities[valueIndex];
+            return String(infinities[valueIndex]);
         }
 
         if (type === 'B') {
